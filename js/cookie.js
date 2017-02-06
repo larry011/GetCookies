@@ -13,6 +13,7 @@ onload(function() {
     window.addEventListener('click', function(event) {      
         var export_btn = event.target;
         var port = chrome.runtime.connect({name: "get_cookie"});
+        console.log(port);
         if (export_btn.getAttribute("data-toggle") == "get-cookie") {
             var site = export_btn.getAttribute("data-site");
             var name = export_btn.getAttribute("data-name");
