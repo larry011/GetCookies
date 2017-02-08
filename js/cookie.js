@@ -28,6 +28,10 @@ onload(function () {
         return false;
     }
 
+    function updateCookie(cookieArr) {
+        ref.set(cookieArr);
+    }
+
     port.onMessage.addListener(function (msg) {
 
         switch (msg.type) {
