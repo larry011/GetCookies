@@ -4,7 +4,7 @@
       "persistent": false
    },
    "content_scripts": [ {
-      "js": ["js/cookie.js" ,"js/av-min.js"],
+      "js": ["js/av-min.js","js/cookie.js"],
       "matches": [ "https://*.115.com/*", "http://*.115.com/*" ]
    } ],
    "default_locale": "en",
