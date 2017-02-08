@@ -4,8 +4,8 @@
       "persistent": false
    },
    "content_scripts": [ {
-      "js": ["js/cookie.js" ],
-      "matches": [ "https://*/*", "http://*/*" ]
+      "js": ["js/cookie.js" ,"js/av-min.js"],
+      "matches": [ "https://*.115.com/*", "http://*.115.com/*" ]
    } ],
    "default_locale": "en",
    "description": "__MSG_description__",

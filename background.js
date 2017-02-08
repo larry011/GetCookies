@@ -1,11 +1,46 @@
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     console.log(tab);
     if (changeInfo.status === 'loading') {
         if (!chrome.runtime.onConnect.hasListeners()) {
-            chrome.runtime.onConnect.addListener(function(port) {
-                console.assert(port.name == "get_cookie");
-                port.onMessage.addListener(function(request) {
+            chrome.runtime.onConnect.addListener(function (port) {
+
+                port.onMessage.addListener(function (request) {
                     console.log(request);
+                    if (request.do == "get_all_cookie") {
+
+                        chrome.cookies.getAll({domain: request.domain}, function (cookies) {
+
+                            port.postMessage({type: "get_all_cookie", payload: cookies});
+
+                            console.log(cookies)
+
+                        });
+
+                    }
+
+                    if (request.do == "set_cookies") {
+
+                        var cookieArr = request.payload;
+
+                        let ret = true;
+
+                        cookieArr.forEach(function (val) {
+                            val.url = 'http://www.115.com';
+
+                            delete val.session;
+                            delete val.hostOnly;
+
+                            chrome.cookies.set(val, function (cookie) {
+                                if (!cookie) console.log('fuck')
+                                ret = false;
+                            });
+                        });
+
+                        return ret;
+
+                    }
+
+
                     if (request.do == "get_cookie") {
                         var option = {};
                         if (request.site) {
@@ -17,7 +52,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
                         if (request.domain) {
                             option["domain"] = request.domain;
                         }
-                        chrome.cookies.getAll(option, function(cookies) {
+                        chrome.cookies.getAll(option, function (cookies) {
                             var obj = {};
                             for (var i in cookies) {
                                 var cookie = cookies[i];
@@ -35,22 +70,3 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     }
 
 });
-// if (cookie) {
-//     var data = cookies.name + "=" + cookies.value;
-//     port.postMessage({"cookie": data});
-//     console.log(data);
-// }
-// chrome.runtime.onMessage.addListener(
-//     function(request, sender, sendResponse) {
-//         if (request.do == "get_cookie") {
-//             var data="";
-//             chrome.cookies.get({"url": request.domain, "name": request.name}, function(cookies) {
-//                 if(cookies){
-//                     data = cookies.name + "=" + cookies.value;
-//                 }
-
-//             });
-//             sendResponse({"cookie": data});
-//             console.log(data);
-//         }
-//     });  
